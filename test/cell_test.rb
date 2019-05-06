@@ -31,4 +31,10 @@ class CellTest < MiniTest::Test
     refute @cellB4.empty?
     assert_equal @cruiser, @cellB4.ship
   end
+
+  def test_cell_starts_not_fired_upon
+    @cellB4.place_ship(@cruiser)
+
+    refute @cellB4.fired_upon?
+  end
 end
