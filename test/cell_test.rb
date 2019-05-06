@@ -53,4 +53,13 @@ class CellTest < MiniTest::Test
 
     assert_equal "M", @cellB4.render
   end
+
+  def test_render_with_ship
+    assert_equal ".", @cellB4.render
+
+    @cellB4.place_ship(@cruiser)
+    @cellB4.fire_upon
+
+    assert_equal "H", @cellB4.render
+  end
 end
