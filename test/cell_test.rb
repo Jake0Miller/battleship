@@ -19,4 +19,8 @@ class CellTest < MiniTest::Test
   def test_cell_starts_without_a_ship
     assert_nil @cellB4.ship
   end
+
+  def test_cell_starts_empty
+    assert cell.empty?
+  end
 end
