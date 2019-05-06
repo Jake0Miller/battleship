@@ -45,4 +45,12 @@ class CellTest < MiniTest::Test
     assert_equal 2, @cellB4.ship.health
     assert @cellB4.fired_upon?
   end
+
+  def test_render_without_ship
+    assert_equal ".", @cellB4.render
+
+    @cellB4.fire_upon
+
+    assert_equal "M", @cellB4.render
+  end
 end
