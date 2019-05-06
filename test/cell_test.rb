@@ -15,4 +15,8 @@ class CellTest < MiniTest::Test
   def test_has_coordinate
     assert_equal "B4", @cellB4.coordinate
   end
+
+  def test_cell_starts_without_a_ship
+    assert_nil @cellB4.ship
+  end
 end
