@@ -58,8 +58,13 @@ class CellTest < MiniTest::Test
     assert_equal ".", @cellB4.render
 
     @cellB4.place_ship(@cruiser)
+
+    assert_equal "S", @cellB4.render(true)
+
     @cellB4.fire_upon
 
     assert_equal "H", @cellB4.render
+    refute @cellB4.ship.sunk?
+    refute @cruiser.sunk?
   end
 end
