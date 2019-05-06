@@ -37,4 +37,12 @@ class CellTest < MiniTest::Test
 
     refute @cellB4.fired_upon?
   end
+
+  def test_cell_gets_fired_upon
+    @cellB4.place_ship(@cruiser)
+    @cellB4.fire_upon
+
+    assert_equal 2, @cellB4.ship.health
+    assert @cellB4.fired_upon?
+  end
 end
