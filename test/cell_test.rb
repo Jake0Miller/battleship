@@ -67,4 +67,15 @@ class CellTest < MiniTest::Test
     refute @cellB4.ship.sunk?
     refute @cruiser.sunk?
   end
+
+  def test_render_with_sunk_ship
+    @cellB4.place_ship(@cruiser)
+    @cellB4.fire_upon
+    @cruiser.hit
+    @cruiser.hit
+
+    assert @cruiser.sunk?
+    assert_equal 0, @cruiser.health
+    assert_equal "X", @cellB4.render
+  end
 end
