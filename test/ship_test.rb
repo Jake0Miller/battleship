@@ -9,7 +9,12 @@ class ShipTest < MiniTest::Test
   end
 
   def test_that_it_exists
-    assert_instance_of Ship, @cruiser 
+    assert_instance_of Ship, @cruiser
   end
 
+  def test_ship_has_name
+    assert_equal "Cruiser", @cruiser.name
+    assert_equal "Sub", @sub.name
+  end
+  
 end
