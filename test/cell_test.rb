@@ -48,7 +48,6 @@ class CellTest < MiniTest::Test
   end
 
   def test_render_without_ship
-    skip
     assert_equal ".", @cellB4.render
 
     @cellB4.fire_upon
