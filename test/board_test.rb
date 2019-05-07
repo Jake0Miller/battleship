@@ -9,7 +9,9 @@ class BoardTest < MiniTest::Test
   def setup
     @board = Board.new
     # @cellB4 = Cell.new("B4")
-    # @cruiser = Ship.new("Cruiser", 3)
+    @cruiser = Ship.new("Cruiser", 3)
+    @sub = Ship.new("Submarine", 2)
+
   end
 
   def test_that_it_exists
@@ -29,7 +31,14 @@ class BoardTest < MiniTest::Test
     refute @board.valid_coordinate?("A5")
     refute @board.valid_coordinate?("E1")
     refute @board.valid_coordinate?("A22")
-    assert @board.valid_coordinate?(:A2)
+    refute @board.valid_coordinate?(:A2)
   end
-  
+
+  def test_valid_placement_by_length
+    refute @board.valid_placement?(@cruiser, ["A1", "A2"])
+    assert @board.valid_placement?(@cruiser, ["A1", "A2", "A3"])
+    assert @board.valid_placement?(@sub, ["A1", "A2"])
+    refute @board.valid_placement?(@sub, ["A1", "A2", "A3"])
+  end
+
 end
