@@ -8,10 +8,8 @@ require 'pry'
 class BoardTest < MiniTest::Test
   def setup
     @board = Board.new
-    # @cellB4 = Cell.new("B4")
     @cruiser = Ship.new("Cruiser", 3)
     @sub = Ship.new("Submarine", 2)
-
   end
 
   def test_that_it_exists
@@ -42,17 +40,17 @@ class BoardTest < MiniTest::Test
   end
 
   def test_nonconsecutive_coordinates
-    refute @board.valid_placement?(cruiser, ["A1", "A2", "A4"])
-    refute @board.valid_placement?(submarine, ["A1", "C1"])
-    refute @board.valid_placement?(cruiser, ["A3", "A2", "A1"])
-    refute @board.valid_placement?(submarine, ["C1", "B1"])
-    refute @board.valid_placement?(cruiser, ["A1", "B2", "C3"])
-    refute @board.valid_placement?(submarine, ["C2", "D3"])
+    refute @board.valid_placement?(@cruiser, ["A1", "A2", "A4"])
+    refute @board.valid_placement?(@sub, ["A1", "C1"])
+    refute @board.valid_placement?(@cruiser, ["A3", "A2", "A1"])
+    refute @board.valid_placement?(@sub, ["C1", "B1"])
+    refute @board.valid_placement?(@cruiser, ["A1", "B2", "C3"])
+    refute @board.valid_placement?(@sub, ["C2", "D3"])
   end
 
   def test_consecutive_coordinates
-    assert @board.valid_placement?(submarine, ["A1", "A2"])
-    assert @board.valid_placement?(cruiser, ["B1", "C1", "D1"])
+    assert @board.valid_placement?(@sub, ["A1", "A2"])
+    assert @board.valid_placement?(@cruiser, ["B1", "C1", "D1"])
   end
 
 end
