@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/ship'
 require './lib/cell'
+require 'pry'
 
 class CellTest < MiniTest::Test
   def setup
@@ -22,7 +23,7 @@ class CellTest < MiniTest::Test
   end
 
   def test_cell_starts_empty
-    assert cell.empty?
+    assert @cellB4.empty?
   end
 
   def test_cell_accepts_ship
@@ -47,6 +48,7 @@ class CellTest < MiniTest::Test
   end
 
   def test_render_without_ship
+    skip
     assert_equal ".", @cellB4.render
 
     @cellB4.fire_upon
@@ -55,6 +57,7 @@ class CellTest < MiniTest::Test
   end
 
   def test_render_with_ship
+    skip
     assert_equal ".", @cellB4.render
 
     @cellB4.place_ship(@cruiser)
@@ -69,6 +72,7 @@ class CellTest < MiniTest::Test
   end
 
   def test_render_with_sunk_ship
+    skip
     @cellB4.place_ship(@cruiser)
     @cellB4.fire_upon
     @cruiser.hit
