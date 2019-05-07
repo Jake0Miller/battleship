@@ -56,7 +56,6 @@ class CellTest < MiniTest::Test
   end
 
   def test_render_with_ship
-    skip
     assert_equal ".", @cellB4.render
 
     @cellB4.place_ship(@cruiser)
@@ -71,7 +70,6 @@ class CellTest < MiniTest::Test
   end
 
   def test_render_with_sunk_ship
-    skip
     @cellB4.place_ship(@cruiser)
     @cellB4.fire_upon
     @cruiser.hit
