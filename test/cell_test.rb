@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/ship'
 require './lib/cell'
+require 'pry'
 
 class CellTest < MiniTest::Test
   def setup
@@ -22,7 +23,7 @@ class CellTest < MiniTest::Test
   end
 
   def test_cell_starts_empty
-    assert cell.empty?
+    assert @cellB4.empty?
   end
 
   def test_cell_accepts_ship
