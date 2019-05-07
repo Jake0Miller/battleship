@@ -26,11 +26,17 @@ class Cell
     end
   end
 
-  def render
-    if fired_upon? == false
+  def render(unhide = false)
+    if @ship != nil and @ship.sunk?
+      return "X"
+    elsif !fired_upon? && !unhide
       return "."
+    elsif !fired_upon? && unhide
+      return "S"
     elsif fired_upon? && empty?
       return "M"
+    elsif fired_upon? && !empty?
+      return "H"
     end
   end
 end
