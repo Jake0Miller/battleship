@@ -65,4 +65,11 @@ class BoardTest < MiniTest::Test
     assert_instance_of Ship, @board.cells["A3"].ship
     assert_nil @board.cells["A4"].ship
   end
+
+  def test_cell_has_same_ship
+    @board.place(@cruiser, ["A1", "A2", "A3"])
+
+    assert @board.cells["A1"].ship == @board.cells["A2"].ship
+  end
+   
 end
