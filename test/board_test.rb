@@ -50,13 +50,11 @@ class BoardTest < MiniTest::Test
   end
 
   def test_consecutive_coordinates
-    skip
     assert @board.valid_placement?(@sub, ["A1", "A2"])
     assert @board.valid_placement?(@cruiser, ["B1", "C1", "D1"])
   end
 
   def test_ship_is_placed
-    skip
     assert_nil @board.cells["A1"].ship
     assert_nil @board.cells["A2"].ship
     assert_nil @board.cells["A3"].ship
@@ -70,14 +68,12 @@ class BoardTest < MiniTest::Test
   end
 
   def test_cell_has_same_ship
-    skip
     @board.place(@cruiser, ["A1", "A2", "A3"])
 
     assert @board.cells["A1"].ship == @board.cells["A2"].ship
   end
 
   def test_overlapping_ships
-    skip
     @board.place(@cruiser, ["A1", "A2", "A3"])
 
     refute @board.valid_placement?(@sub, ["A1", "B1"])
