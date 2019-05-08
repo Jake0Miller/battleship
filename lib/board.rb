@@ -4,16 +4,16 @@ class Board
   def initialize
     @cells = {}
     @board_size = 4
-    @board_letters = ""
-    @board_numbers = ""
+    @board_letters = []
+    @board_numbers = []
     setup_board
   end
 
   def setup_board
-    (65.upto(64+@board_size)).each { |letter| @board_letters += letter.chr }
-    (1.upto(@board_size)).each { |num| @board_numbers += num.to_s }
-    @board_letters.split('').each do |letter|
-      @board_numbers.split('').each do |num|
+    (65.upto(64+@board_size)).each { |letter| @board_letters << letter.chr }
+    (1.upto(@board_size)).each { |num| @board_numbers << num.to_s }
+    @board_letters.each do |letter|
+      @board_numbers.each do |num|
         @cells["#{letter.chr}#{num.to_s}"] = Cell.new("#{letter.chr}#{num.to_s}")
       end
     end
@@ -55,4 +55,22 @@ class Board
     return nil if !valid_placement?(ship, coords)
     coords.each { |coord| @cells[coord].place_ship(ship) }
   end
+
+  def render(unhide = false)
+     board = "  "
+     # binding.pry
+     @board_numbers.each do |num|
+       board << num + " "
+     end
+     board << "\n"
+     @board_letters.each do |cur_letter|
+       board << cur_letter+" "
+       @board_numbers.each do |number|
+         board << @cells[cur_letter+number.to_s].render(unhide)+" "
+       end
+       board << "\n"
+     end
+     board
+  end
+
 end

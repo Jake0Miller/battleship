@@ -80,19 +80,18 @@ class BoardTest < MiniTest::Test
   end
 
   def test_render_empty_board
-    skip
+
     expected = "  1 2 3 4 \n" +
               "A . . . . \n" +
               "B . . . . \n" +
               "C . . . . \n" +
               "D . . . . \n"
-    actual = board.render
+    actual = @board.render
 
     assert_equal expected, actual
   end
 
   def test_render_board_with_ship
-    skip
     @board.place(@cruiser, ["A1", "A2", "A3"])
 
     expected = "  1 2 3 4 \n" +
@@ -101,7 +100,7 @@ class BoardTest < MiniTest::Test
               "C . . . . \n" +
               "D . . . . \n"
 
-    actual = board.render
+    actual = @board.render
 
     assert_equal expected, actual
 
@@ -111,13 +110,12 @@ class BoardTest < MiniTest::Test
               "C . . . . \n" +
               "D . . . . \n"
 
-    actual = board.render(true)
+    actual = @board.render(true)
 
     assert_equal expected, actual
   end
 
   def test_board_with_hits_and_misses
-    skip
     @board.place(@cruiser, ["A1", "A2", "A3"])
     @board.place(@sub, ["C1", "D1"])
 
@@ -132,7 +130,7 @@ class BoardTest < MiniTest::Test
               "C X . . . \n" +
               "D X . . . \n"
 
-    actual = board.render
+    actual = @board.render
 
     assert_equal expected, actual
 
@@ -142,7 +140,7 @@ class BoardTest < MiniTest::Test
               "C X . . . \n" +
               "D X . . . \n"
 
-    actual = board.render(true)
+    actual = @board.render(true)
 
     assert_equal expected, actual
   end

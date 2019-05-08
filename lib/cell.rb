@@ -29,9 +29,9 @@ class Cell
   def render(unhide = false)
     if @ship != nil and @ship.sunk?
       return "X"
-    elsif !fired_upon? && !unhide
+    elsif !fired_upon? && (empty? || !unhide)
       return "."
-    elsif !fired_upon? && unhide
+    elsif !fired_upon? && unhide && !empty?
       return "S"
     elsif fired_upon? && empty?
       return "M"
