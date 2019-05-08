@@ -18,9 +18,9 @@ class BoardTest < MiniTest::Test
 
   def test_board_cells
     assert_instance_of Hash, @board.cells
-    assert_instance_of Cell, @board.cells.first
-    assert_equal 16, @board.cells.keys
-    assert_equal 16, @board.cells.values
+    assert_instance_of Cell, @board.cells["A1"]
+    assert_equal 16, @board.cells.keys.length
+    assert_equal 16, @board.cells.values.length
   end
 
   def test_valid_coordinate?
@@ -40,6 +40,7 @@ class BoardTest < MiniTest::Test
   end
 
   def test_nonconsecutive_coordinates
+    skip
     refute @board.valid_placement?(@cruiser, ["A1", "A2", "A4"])
     refute @board.valid_placement?(@sub, ["A1", "C1"])
     refute @board.valid_placement?(@cruiser, ["A3", "A2", "A1"])
@@ -49,11 +50,13 @@ class BoardTest < MiniTest::Test
   end
 
   def test_consecutive_coordinates
+    skip
     assert @board.valid_placement?(@sub, ["A1", "A2"])
     assert @board.valid_placement?(@cruiser, ["B1", "C1", "D1"])
   end
 
   def test_ship_is_placed
+    skip
     assert_nil @board.cells["A1"].ship
     assert_nil @board.cells["A2"].ship
     assert_nil @board.cells["A3"].ship
@@ -67,18 +70,21 @@ class BoardTest < MiniTest::Test
   end
 
   def test_cell_has_same_ship
+    skip
     @board.place(@cruiser, ["A1", "A2", "A3"])
 
     assert @board.cells["A1"].ship == @board.cells["A2"].ship
   end
 
   def test_overlapping_ships
+    skip
     @board.place(@cruiser, ["A1", "A2", "A3"])
 
     refute @board.valid_placement?(@sub, ["A1", "B1"])
   end
 
   def test_render_empty_board
+    skip
     expected = "  1 2 3 4 \n" +
               "A . . . . \n" +
               "B . . . . \n" +
@@ -90,6 +96,7 @@ class BoardTest < MiniTest::Test
   end
 
   def test_render_board_with_ship
+    skip
     @board.place(@cruiser, ["A1", "A2", "A3"])
 
     expected = "  1 2 3 4 \n" +
@@ -114,6 +121,7 @@ class BoardTest < MiniTest::Test
   end
 
   def test_board_with_hits_and_misses
+    skip
     @board.place(@cruiser, ["A1", "A2", "A3"])
     @board.place(@sub, ["C1", "D1"])
 
@@ -142,5 +150,4 @@ class BoardTest < MiniTest::Test
 
     assert_equal expected, actual
   end
-
 end
