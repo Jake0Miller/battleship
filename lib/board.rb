@@ -58,7 +58,6 @@ class Board
 
   def render(unhide = false)
      board = "  "
-     # binding.pry
      @board_numbers.each do |num|
        board << num + " "
      end
@@ -72,5 +71,4 @@ class Board
      end
      board
   end
-
 end
