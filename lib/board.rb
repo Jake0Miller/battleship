@@ -21,4 +21,11 @@ class Board
     return false if !"1234".include?(coord[1])
     true
   end
+
+  def valid_placement?(ship, coords)
+    return false if ship.length != coords.length
+    return false if coords.any? { |coord| valid_coordinate?(coord) == false }
+    
+    true
+  end
 end
