@@ -23,6 +23,7 @@ def play?
   else
     play?
   end
+  start_game
 end
 
 def create_boards
@@ -66,7 +67,69 @@ def place_player_ships
   puts "Enter the squares for the Sub (2 spaces):"
   puts "Example: A1 A2"
   ask_for_coordinates(sub)
+end
 
+def start_game
+  take_turn
+  display_comp_board
+  display_player_board
+end
+
+def take_turn
+  display_comp_board
+  display_player_board
+  puts "Enter the coordinate for your shot (eg B4):"
+  pshot = player_shot
+  @comp_board.cells[pshot].fire_upon
+  cshot = comp_shot
+  @player_board.cells[cshot].fire_upon
+  puts display_shot_result(pshot, true)
+  puts display_shot_result(cshot)
+end
+
+def player_shot
+  shot = gets.chomp
+  if !@comp_board.valid_coordinate?(shot) || @comp_board.cells[shot].fired_upon?
+    puts "Please enter a valid coordinate (eg B2):"
+    player_shot
+  end
+  shot
+end
+
+def comp_shot
+  "A3"
+end
+
+def display_shot_result(coord, player = false)
+  if player
+    case @comp_board.cells[coord].render
+    when "M"
+      return "Your shot on #{coord} was a miss."
+    when "H"
+      return "Your shot on #{coord} was a hit!"
+    when "X"
+      return "#{coord} hit and sunk!"
+    end
+  else
+    case @player_board.cells[coord].render
+    when "M"
+      return "My shot on #{coord} was a miss."
+    when "H"
+      return "My shot on #{coord} was a hit!"
+    when "X"
+      return "#{coord} hit and sunk!"
+    end
+  end
+end
+
+def display_comp_board
+  puts "=============COMPUTER BOARD============="
+  puts @comp_board.render
+end
+
+def display_player_board
+  puts "==============PLAYER BOARD=============="
+  puts @player_board.render(true)
 end
 
 start
