@@ -27,7 +27,7 @@ class Cell
   end
 
   def render(unhide = false)
-    if @ship != nil and @ship.sunk?
+    if @ship != nil && @ship.sunk?
       return "X"
     elsif !fired_upon? && (empty? || !unhide)
       return "."
