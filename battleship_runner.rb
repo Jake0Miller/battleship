@@ -25,7 +25,6 @@ def play?
   start_game
 end
 
-# THIS NEEDS TO BE UPDATED TO CHECK FOR BAD INPUT
 def create_boards
   puts "Select board size (4 to 26):"
   size = gets.chomp.to_i
@@ -46,10 +45,16 @@ end
 
 def place_player_ships
   num_ships = set_num_ships
+  puts " "
   puts "I have laid out my ships on the grid."
-  puts "You now need to lay out your ships."
+  puts "You now need to lay out your ships.\n"
   ships = ask_for_ships(num_ships)
+  puts " "
   ships.each { |ship| place_ships(ship) }
+  puts " "
+  puts "All ships have been placed."
+  puts "Let the game begin!"
+  puts " "
 end
 
 def place_ships(ship)
@@ -57,7 +62,7 @@ def place_ships(ship)
   puts "The #{cur_ship.name} is #{cur_ship.length} units long."
   puts @player_board.render(true)
 
-  puts "Enter the squares for the #{cur_ship.name} (#{cur_ship.length} spaces):"
+  puts "Enter the coordinates for the #{cur_ship.name} (#{cur_ship.length} spaces):"
   example = "Example: "
   cur_ship.length.times { |i| example << "A#{i+1} " }
   puts example
@@ -67,8 +72,7 @@ end
 def ask_for_ships(num_ships)
   ships = []
   num_ships.times do
-    puts "How big should this ship be? (2-5)"
-    input_size = gets.chomp.to_i
+    input_size = set_ship_size
     puts "What do you want to call this ship? (eg Submarine)"
     input_name = gets.chomp
     ships << [input_name, input_size]
@@ -76,10 +80,20 @@ def ask_for_ships(num_ships)
   return ships
 end
 
+def set_ship_size
+  puts "How big should this ship be? (2-5)"
+  input_size = gets.chomp.to_i
+  if input_size < 2 || input_size > 5
+    set_ship_size
+  else
+    return input_size
+  end
+end
+
 def set_num_ships
   puts "How many ships do you want to play with? (1-5)"
   input_number = gets.chomp.to_i
-  if input_number < 1 && input_number > 5
+  if input_number < 1 || input_number > 5
     set_num_ships
   else
     return input_number
