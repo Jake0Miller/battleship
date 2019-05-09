@@ -16,6 +16,7 @@ def play?
   puts "Enter p to play. Enter q to quit."
   answer = gets.chomp.downcase
   if answer == "q"
+    puts "Goodbye!"
     exit
   elsif answer == "p"
     create_boards
@@ -45,7 +46,7 @@ def place_player_ships
   puts "I have laid out my ships on the grid."
   puts "You now need to lay out your ships."
   puts "The Cruiser is two units long and the Submarine is three units long."
-  @player_board.render(true)
+  puts @player_board.render(true)
   cruiser = Ship.new("Cruiser", 3)
   sub = Ship.new("Submarine", 2)
 
@@ -56,7 +57,7 @@ def place_player_ships
       puts "Those are invalid coordinates. Please try again:"
       ask_for_coordinates(ship)
     end
-    @board.place(ship, coordinates)
+    @player_board.place(ship, coordinates)
   end
 
   puts "Enter the squares for the Cruiser (3 spaces):"
@@ -65,8 +66,6 @@ def place_player_ships
   puts "Enter the squares for the Sub (2 spaces):"
   puts "Example: A1 A2"
   ask_for_coordinates(sub)
-
-end
 
 end
 
