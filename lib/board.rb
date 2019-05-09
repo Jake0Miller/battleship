@@ -10,8 +10,10 @@ class Board
   end
 
   def setup_board
-    (65.upto(64+@board_size)).each { |letter| @board_letters << letter.chr }
-    (1.upto(@board_size)).each { |num| @board_numbers << num.to_s }
+    row = 'A'.ord
+    col = 1
+    (row.upto(row+@board_size-1)).each { |letter| @board_letters << letter.chr }
+    (col.upto(@board_size)).each { |num| @board_numbers << num.to_s }
     @board_letters.each do |letter|
       @board_numbers.each do |num|
         @cells["#{letter.chr}#{num.to_s}"] = Cell.new("#{letter.chr}#{num.to_s}")
@@ -21,7 +23,7 @@ class Board
 
   def valid_coordinate?(coord)
     return false if !coord.is_a? String
-    return false if coord.length != 2
+    return false if coord.length > @board_size.to_s.length + 1
     return false if !@board_letters.include?(coord[0])
     return false if !@board_numbers.include?(coord[1])
     true
