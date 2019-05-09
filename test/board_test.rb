@@ -7,7 +7,7 @@ require 'pry'
 
 class BoardTest < MiniTest::Test
   def setup
-    @board = Board.new
+    @board = Board.new(4)
     @cruiser = Ship.new("Cruiser", 3)
     @sub = Ship.new("Submarine", 2)
   end

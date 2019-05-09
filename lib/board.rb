@@ -1,9 +1,9 @@
 class Board
   attr_reader :cells
 
-  def initialize
+  def initialize(board_size)
     @cells = {}
-    @board_size = 4
+    @board_size = board_size
     @board_letters = []
     @board_numbers = []
     setup_board
