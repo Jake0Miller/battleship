@@ -42,7 +42,32 @@ def place_comp_ships
 end
 
 def place_player_ships
-  
+  puts "I have laid out my ships on the grid."
+  puts "You now need to lay out your ships."
+  puts "The Cruiser is two units long and the Submarine is three units long."
+  @player_board.render(true)
+  cruiser = Ship.new("Cruiser", 3)
+  sub = Ship.new("Submarine", 2)
+
+  def ask_for_coordinates(ship)
+    print "> "
+    coordinates = gets.chomp.split(" ")
+    if !@player_board.valid_placement?(ship, coordinates)
+      puts "Those are invalid coordinates. Please try again:"
+      ask_for_coordinates(ship)
+    end
+    @board.place(ship, coordinates)
+  end
+
+  puts "Enter the squares for the Cruiser (3 spaces):"
+  puts "Example: A1 A2 A3"
+  ask_for_coordinates(cruiser)
+  puts "Enter the squares for the Sub (2 spaces):"
+  puts "Example: A1 A2"
+  ask_for_coordinates(sub)
+
+end
+
 end
 
 start
