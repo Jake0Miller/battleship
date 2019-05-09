@@ -1,11 +1,12 @@
 class Board
-  attr_reader :cells
+  attr_reader :cells, :ships
 
   def initialize(board_size)
     @cells = {}
     @board_size = board_size
     @board_letters = []
     @board_numbers = []
+    @ships = []
     setup_board
   end
 
@@ -56,6 +57,7 @@ class Board
   def place(ship, coords)
     return nil if !valid_placement?(ship, coords)
     coords.each { |coord| @cells[coord].place_ship(ship) }
+    @ships << ship
   end
 
   def render(unhide = false)
@@ -72,5 +74,9 @@ class Board
        board << "\n"
      end
      board
+  end
+
+  def all_ships_sunk
+    @ships.all? { |ship| ship.sunk? }
   end
 end
