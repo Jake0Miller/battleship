@@ -63,11 +63,11 @@ class Board
   def render(unhide = false)
      board = "  "
      @board_numbers.each do |num|
-       board << num + " "
+       board << num[-1] + " "
      end
      board << "\n"
      @board_letters.each do |cur_letter|
-       board << cur_letter+" "
+       board << cur_letter + " "
        @board_numbers.each do |number|
          board << @cells[cur_letter+number.to_s].render(unhide)+" "
        end
