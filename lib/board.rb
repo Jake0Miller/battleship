@@ -1,5 +1,5 @@
 class Board
-  attr_reader :cells, :ships
+  attr_reader :cells, :ships, :board_letters, :board_numbers
 
   def initialize(board_size)
     @cells = {}
@@ -26,7 +26,7 @@ class Board
     return false if !coord.is_a? String
     return false if coord.length > @board_size.to_s.length + 1
     return false if !@board_letters.include?(coord[0])
-    return false if !@board_numbers.include?(coord[1])
+    return false if !@board_numbers.include?(coord[1..-1])
     true
   end
 
@@ -35,13 +35,13 @@ class Board
     return false if coords.any? { |coord| valid_coordinate?(coord) == false }
     return false if coords.any? { |coord| !@cells[coord].empty? }
     return check_letters_same(ship,coords) if coords[0][0] == coords[1][0]
-    return check_numbers_same(ship,coords) if coords[0][1] == coords[1][1]
+    return check_numbers_same(ship,coords) if coords[0][1..-1] == coords[1][1..-1]
   end
 
   def check_letters_same(ship,coords)
     (ship.length-1).times do |i|
       return false if coords[i][0] != coords[i+1][0]
-      return false if coords[i][1].next != coords[i+1][1]
+      return false if coords[i][1..-1].next != coords[i+1][1..-1]
     end
     true
   end
@@ -49,7 +49,7 @@ class Board
   def check_numbers_same(ship,coords)
     (ship.length-1).times do |i|
       return false if coords[i][0].next != coords[i+1][0]
-      return false if coords[i][1] != coords[i+1][1]
+      return false if coords[i][1..-1] != coords[i+1][1..-1]
     end
     true
   end
@@ -63,11 +63,11 @@ class Board
   def render(unhide = false)
      board = "  "
      @board_numbers.each do |num|
-       board << num + " "
+       board << num[-1] + " "
      end
      board << "\n"
      @board_letters.each do |cur_letter|
-       board << cur_letter+" "
+       board << cur_letter + " "
        @board_numbers.each do |number|
          board << @cells[cur_letter+number.to_s].render(unhide)+" "
        end

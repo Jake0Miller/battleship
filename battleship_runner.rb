@@ -1,8 +1,18 @@
-
 require './lib/cell'
 require './lib/board'
 require './lib/ship'
 require 'pry'
+
+@min_board_size = 4
+@max_board_size = 15
+@min_num_ships = 1
+@max_num_ships = 5
+@min_ship_length = 2
+@max_ship_length = 5
+
+# when the board is over 9 spaces, we need to fix
+# how we grab the board coordinates and also
+# how we display the board
 
 def start
   puts "Welcome to BATTLESHIP"
@@ -26,38 +36,64 @@ def play?
 end
 
 def create_boards
-  puts "Select board size (4 to 26):"
+  puts "Select board size (#{@min_board_size} to #{@max_board_size}):"
   size = gets.chomp.to_i
-  create_boards if size > 26 || size < 4
+  create_boards if size > @max_board_size || size < @min_board_size
   @player_board = Board.new(size)
   @comp_board = Board.new(size)
-  place_comp_ships
-  place_player_ships
+  place_ships
 end
 
-# THIS NEEDS TO BE UPDATED
-def place_comp_ships
-  cruiser = Ship.new("Cruiser", 3)
-  sub = Ship.new("Submarine", 2)
-  @comp_board.place(cruiser, ["A1", "A2", "A3"])
-  @comp_board.place(sub, ["C3", "D3"])
+def place_comp_ships(ship)
+  cur_ship = Ship.new(ship[0], ship[1])
+  @comp_board.place(cur_ship, coord_generator(ship[1]))
 end
 
-def place_player_ships
+def coord_generator(length)
+  number = @comp_board.board_numbers[0..-1*length].sample
+  letter = @comp_board.board_letters[0..-1*length].sample
+  coords = [letter+number]
+  right_or_down = rand(0..1)
+  if right_or_down = 0
+    coords = make_coords_with_same_letter(coords,length)
+  else
+    coords = make_coords_with_same_number(coords,length)
+  end
+  coords
+end
+
+def make_coords_with_same_letter(coords,length)
+  cur_coord = coords[0]
+  (length-1).times do
+    cur_coord = cur_coord[0] + cur_coord[1].next
+    coords << cur_coord
+  end
+  coords
+end
+
+def make_coords_with_same_number(coords,length)
+  cur_coord = coords[0]
+  (length-1).times do
+    cur_coord = cur_coord[0].next + cur_coord[1]
+    coords << cur_coord
+  end
+end
+
+def place_ships
   num_ships = set_num_ships
   puts " "
-  puts "I have laid out my ships on the grid."
-  puts "You now need to lay out your ships.\n"
+  puts "Create your fleet!\n"
   ships = ask_for_ships(num_ships)
   puts " "
-  ships.each { |ship| place_ships(ship) }
+  ships.each { |ship| place_player_ships(ship) }
+  ships.each { |ship| place_comp_ships(ship) }
   puts " "
   puts "All ships have been placed."
   puts "Let the game begin!"
   puts " "
 end
 
-def place_ships(ship)
+def place_player_ships(ship)
   cur_ship = Ship.new(ship[0], ship[1])
   puts "The #{cur_ship.name} is #{cur_ship.length} units long."
   puts @player_board.render(true)
@@ -81,9 +117,9 @@ def ask_for_ships(num_ships)
 end
 
 def set_ship_size
-  puts "How big should this ship be? (2-5)"
+  puts "How big should this ship be? (#{@min_ship_length}-#{@max_ship_length})"
   input_size = gets.chomp.to_i
-  if input_size < 2 || input_size > 5
+  if input_size < @min_ship_length || input_size > @max_ship_length
     set_ship_size
   else
     return input_size
@@ -91,9 +127,9 @@ def set_ship_size
 end
 
 def set_num_ships
-  puts "How many ships do you want to play with? (1-5)"
+  puts "How many ships do you want to play with? (#{@min_num_ships}-#{@max_num_ships})"
   input_number = gets.chomp.to_i
-  if input_number < 1 || input_number > 5
+  if input_number < @min_num_ships || input_number > @max_num_ships
     set_num_ships
   else
     return input_number
@@ -118,7 +154,7 @@ def start_game
 end
 
 def take_turn
-  display_comp_board
+  display_comp_board(false)
   display_player_board
   puts "Enter the coordinate for your shot (eg B4):"
   pshot = player_shot
@@ -165,9 +201,9 @@ def display_shot_result(coord, player = false)
   end
 end
 
-def display_comp_board
+def display_comp_board(unhide)
   puts "=============COMPUTER BOARD============="
-  puts @comp_board.render
+  puts @comp_board.render(unhide)
 end
 
 def display_player_board
@@ -176,15 +212,17 @@ def display_player_board
 end
 
 def game_over?
-  if @player_board.all_ships_sunk
+  return false if !@player_board.all_ships_sunk && !@comp_board.all_ships_sunk
+  display_comp_board(true)
+  display_player_board
+  if @player_board.all_ships_sunk && @comp_board.all_ships_sunk
+    puts "It was a tie!"
+  elsif @player_board.all_ships_sunk
     puts "I won!"
-    return true
-  end
-  if @comp_board.all_ships_sunk
+  elsif @comp_board.all_ships_sunk
     puts "You won!"
-    return true
   end
-  false
+  true
 end
 
 start
