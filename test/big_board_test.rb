@@ -6,8 +6,6 @@ require './lib/board'
 require 'pry'
 
 class BoardTest < MiniTest::Test
-  make_my_diffs_pretty!
-
   def setup
     @board = Board.new(12)
     @sub = Ship.new("Submarine", 2)
@@ -36,19 +34,20 @@ class BoardTest < MiniTest::Test
     @board.place(@sub, ["A10", "A11"])
     @board.place(@cruiser, ["B10", "C10", "D10"])
 
-    expected = "  1 2 3 4 5 6 7 8 9 10 11 12 \n" +
-              "A . . . . . . . . . S S . \n" +
-              "B . . . . . . . . . S . . \n" +
-              "C . . . . . . . . . S . . \n" +
-              "D . . . . . . . . . S . . \n" +
-              "E . . . . . . . . . . . . \n" +
-              "F . . . . . . . . . . . . \n" +
-              "G . . . . . . . . . . . . \n" +
-              "H . . . . . . . . . . . . \n" +
-              "I . . . . . . . . . . . . \n" +
-              "J . . . . . . . . . . . . \n" +
-              "K . . . . . . . . . . . . \n" +
-              "L . . . . . . . . . . . . \n" +
+    expected = "                    1 1 1 \n" +
+               "  1 2 3 4 5 6 7 8 9 0 1 2 \n" +
+               "A . . . . . . . . . S S . \n" +
+               "B . . . . . . . . . S . . \n" +
+               "C . . . . . . . . . S . . \n" +
+               "D . . . . . . . . . S . . \n" +
+               "E . . . . . . . . . . . . \n" +
+               "F . . . . . . . . . . . . \n" +
+               "G . . . . . . . . . . . . \n" +
+               "H . . . . . . . . . . . . \n" +
+               "I . . . . . . . . . . . . \n" +
+               "J . . . . . . . . . . . . \n" +
+               "K . . . . . . . . . . . . \n" +
+               "L . . . . . . . . . . . . \n"
 
     actual = @board.render(true)
 
