@@ -17,7 +17,7 @@ class Board
     (col .. @board_size).each { |num| @board_numbers << num.to_s }
     @board_letters.each do |letter|
       @board_numbers.each do |num|
-        @cells["#{letter.chr}#{num.to_s}"] = Cell.new("#{letter.chr}#{num.to_s}")
+        @cells["#{letter}#{num}"] = Cell.new("#{letter}#{num}")
       end
     end
   end

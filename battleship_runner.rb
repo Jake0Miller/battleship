@@ -1,6 +1,7 @@
 require './lib/cell'
 require './lib/board'
 require './lib/ship'
+require './lib/shot_caller'
 require './lib/coordinate_generator'
 require 'pry'
 
@@ -34,14 +35,14 @@ end
 
 def create_boards
   puts "Select board size (#{@min_board_size} to #{@max_board_size}):"
-  size = gets.chomp.to_i
-  create_boards if size > @max_board_size || size < @min_board_size
-  @player_board = Board.new(size)
-  @comp_board = Board.new(size)
-  place_ships
+  board_size = gets.chomp.to_i
+  create_boards if board_size > @max_board_size || board_size < @min_board_size
+  @player_board = Board.new(board_size)
+  @comp_board = Board.new(board_size)
+  place_ships(board_size)
 end
 
-def place_ships
+def place_ships(board_size)
   num_ships = set_num_ships
   puts " "
   puts "Create your fleet!\n"
@@ -49,6 +50,7 @@ def place_ships
   puts " "
   ships.each { |ship| place_player_ships(ship) }
   ships.each { |ship| place_comp_ships(ship) }
+  @shooter = ShotCaller.new(board_size,ships)
   puts " "
   puts "All ships have been placed."
   puts "Let the game begin!"
@@ -156,7 +158,7 @@ end
 
 # THIS NEEDS TO BE UPDATED. A LOT.
 def comp_shot
-  "A3"
+  shot = @shooter.call_shot
 end
 
 def display_shot_result(coord, player = false)
