@@ -1,6 +1,7 @@
 require './lib/cell'
 require './lib/board'
 require './lib/ship'
+require './lib/coordinate_generator'
 require 'pry'
 
 @min_board_size = 4
@@ -9,10 +10,6 @@ require 'pry'
 @max_num_ships = 5
 @min_ship_length = 2
 @max_ship_length = 5
-
-# when the board is over 9 spaces, we need to fix
-# how we grab the board coordinates and also
-# how we display the board
 
 def start
   puts "Welcome to BATTLESHIP"
@@ -35,7 +32,6 @@ def play?
   start_game
 end
 
-#
 def create_boards
   puts "Select board size (#{@min_board_size} to #{@max_board_size}):"
   size = gets.chomp.to_i
@@ -43,12 +39,6 @@ def create_boards
   @player_board = Board.new(size)
   @comp_board = Board.new(size)
   place_ships
-end
-
-def place_comp_ships(ship)
-  cur_ship = Ship.new(ship[0], ship[1])
-  coord_generator = CoordinateGenerator.new(@comp_board.board_numbers, @comp_board.board_letters)
-  @comp_board.place(cur_ship, coord_generator.generate(ship[1]))
 end
 
 def place_ships
@@ -65,27 +55,27 @@ def place_ships
   puts " "
 end
 
-def place_player_ships(ship)
-  cur_ship = Ship.new(ship[0], ship[1])
-  puts "The #{cur_ship.name} is #{cur_ship.length} units long."
-  puts @player_board.render(true)
-
-  puts "Enter the coordinates for the #{cur_ship.name} (#{cur_ship.length} spaces):"
-  example = "Example: "
-  cur_ship.length.times { |i| example << "A#{i+1} " }
-  puts example
-  ask_for_coordinates(cur_ship)
+def set_num_ships
+  puts "How many ships do you want to play with? (#{@min_num_ships}-#{@max_num_ships})"
+  input_number = gets.chomp.to_i
+  if input_number < @min_num_ships || input_number > @max_num_ships
+    set_num_ships
+  else
+    return input_number
+  end
 end
 
 def ask_for_ships(num_ships)
   ships = []
   num_ships.times do
-    input_size = set_ship_size
-    puts "What do you want to call this ship? (eg Submarine)"
-    input_name = gets.chomp
-    ships << [input_name, input_size]
+    ships << [set_ship_name, set_ship_size]
   end
   return ships
+end
+
+def set_ship_name
+  puts "What do you want to call this ship? (eg Submarine)"
+  input_name = gets.chomp
 end
 
 def set_ship_size
@@ -98,14 +88,13 @@ def set_ship_size
   end
 end
 
-def set_num_ships
-  puts "How many ships do you want to play with? (#{@min_num_ships}-#{@max_num_ships})"
-  input_number = gets.chomp.to_i
-  if input_number < @min_num_ships || input_number > @max_num_ships
-    set_num_ships
-  else
-    return input_number
-  end
+def place_player_ships(ship)
+  cur_ship = Ship.new(ship[0], ship[1])
+  puts "The #{cur_ship.name} is #{cur_ship.length} units long."
+  puts @player_board.render(true)
+  puts "Enter the coordinates for the #{cur_ship.name} (#{cur_ship.length} spaces):"
+  puts (0..cur_ship.length).inject("Example: ") { |text, i| text + "A#{i+1} "}
+  ask_for_coordinates(cur_ship)
 end
 
 def ask_for_coordinates(ship)
@@ -116,6 +105,15 @@ def ask_for_coordinates(ship)
     ask_for_coordinates(ship)
   end
   @player_board.place(ship, coordinates)
+end
+
+def place_comp_ships(ship)
+  cur_ship = Ship.new(ship[0], ship[1])
+  coord_generator = CoordinateGenerator.new(@comp_board.board_numbers, @comp_board.board_letters)
+  placed = nil
+  while placed.nil?
+    placed = @comp_board.place(cur_ship, coord_generator.generate(ship[1]))
+  end
 end
 
 def start_game
@@ -135,6 +133,16 @@ def take_turn
   @player_board.cells[cshot].fire_upon
   puts display_shot_result(pshot, true)
   puts display_shot_result(cshot)
+end
+
+def display_comp_board(unhide)
+  puts "=============COMPUTER BOARD============="
+  puts @comp_board.render(unhide)
+end
+
+def display_player_board
+  puts "==============PLAYER BOARD=============="
+  puts @player_board.render(true)
 end
 
 def player_shot
@@ -171,16 +179,6 @@ def display_shot_result(coord, player = false)
       return "#{coord} hit and sunk!"
     end
   end
-end
-
-def display_comp_board(unhide)
-  puts "=============COMPUTER BOARD============="
-  puts @comp_board.render(unhide)
-end
-
-def display_player_board
-  puts "==============PLAYER BOARD=============="
-  puts @player_board.render(true)
 end
 
 def game_over?
