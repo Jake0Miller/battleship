@@ -1,18 +1,15 @@
 require './lib/cell'
 require './lib/board'
 require './lib/ship'
+require './lib/coordinate_generator'
 require 'pry'
 
 @min_board_size = 4
-@max_board_size = 15
+@max_board_size = 26
 @min_num_ships = 1
 @max_num_ships = 5
 @min_ship_length = 2
 @max_ship_length = 5
-
-# when the board is over 9 spaces, we need to fix
-# how we grab the board coordinates and also
-# how we display the board
 
 def start
   puts "Welcome to BATTLESHIP"
@@ -44,42 +41,6 @@ def create_boards
   place_ships
 end
 
-def place_comp_ships(ship)
-  cur_ship = Ship.new(ship[0], ship[1])
-  @comp_board.place(cur_ship, coord_generator(ship[1]))
-end
-
-# make this loop until all ships are placed successfully
-def coord_generator(length)
-  number = @comp_board.board_numbers[0..-1*length].sample
-  letter = @comp_board.board_letters[0..-1*length].sample
-  coords = [letter+number]
-  right_or_down = rand(0..1)
-  if right_or_down == 0
-    coords = make_coords_with_same_letter(coords,length)
-  else
-    coords = make_coords_with_same_number(coords,length)
-  end
-  coords
-end
-
-def make_coords_with_same_letter(coords,length)
-  cur_coord = coords[0]
-  (length-1).times do
-    cur_coord = cur_coord[0] + cur_coord[1].next
-    coords << cur_coord
-  end
-  coords
-end
-
-def make_coords_with_same_number(coords,length)
-  cur_coord = coords[0]
-  (length-1).times do
-    cur_coord = cur_coord[0].next + cur_coord[1]
-    coords << cur_coord
-  end
-end
-
 def place_ships
   num_ships = set_num_ships
   puts " "
@@ -94,27 +55,27 @@ def place_ships
   puts " "
 end
 
-def place_player_ships(ship)
-  cur_ship = Ship.new(ship[0], ship[1])
-  puts "The #{cur_ship.name} is #{cur_ship.length} units long."
-  puts @player_board.render(true)
-
-  puts "Enter the coordinates for the #{cur_ship.name} (#{cur_ship.length} spaces):"
-  example = "Example: "
-  cur_ship.length.times { |i| example << "A#{i+1} " }
-  puts example
-  ask_for_coordinates(cur_ship)
+def set_num_ships
+  puts "How many ships do you want to play with? (#{@min_num_ships}-#{@max_num_ships})"
+  input_number = gets.chomp.to_i
+  if input_number < @min_num_ships || input_number > @max_num_ships
+    set_num_ships
+  else
+    return input_number
+  end
 end
 
 def ask_for_ships(num_ships)
   ships = []
   num_ships.times do
-    input_size = set_ship_size
-    puts "What do you want to call this ship? (eg Submarine)"
-    input_name = gets.chomp
-    ships << [input_name, input_size]
+    ships << [set_ship_name, set_ship_size]
   end
   return ships
+end
+
+def set_ship_name
+  puts "What do you want to call this ship? (eg Submarine)"
+  input_name = gets.chomp
 end
 
 def set_ship_size
@@ -127,14 +88,13 @@ def set_ship_size
   end
 end
 
-def set_num_ships
-  puts "How many ships do you want to play with? (#{@min_num_ships}-#{@max_num_ships})"
-  input_number = gets.chomp.to_i
-  if input_number < @min_num_ships || input_number > @max_num_ships
-    set_num_ships
-  else
-    return input_number
-  end
+def place_player_ships(ship)
+  cur_ship = Ship.new(ship[0], ship[1])
+  puts "The #{cur_ship.name} is #{cur_ship.length} units long."
+  puts @player_board.render(true)
+  puts "Enter the coordinates for the #{cur_ship.name} (#{cur_ship.length} spaces):"
+  puts (0..cur_ship.length).inject("Example: ") { |text, i| text + "A#{i+1} "}
+  ask_for_coordinates(cur_ship)
 end
 
 def ask_for_coordinates(ship)
@@ -145,6 +105,15 @@ def ask_for_coordinates(ship)
     ask_for_coordinates(ship)
   end
   @player_board.place(ship, coordinates)
+end
+
+def place_comp_ships(ship)
+  cur_ship = Ship.new(ship[0], ship[1])
+  coord_generator = CoordinateGenerator.new(@comp_board.board_numbers, @comp_board.board_letters)
+  placed = nil
+  while placed.nil?
+    placed = @comp_board.place(cur_ship, coord_generator.generate(ship[1]))
+  end
 end
 
 def start_game
@@ -164,6 +133,16 @@ def take_turn
   @player_board.cells[cshot].fire_upon
   puts display_shot_result(pshot, true)
   puts display_shot_result(cshot)
+end
+
+def display_comp_board(unhide)
+  puts "=============COMPUTER BOARD============="
+  puts @comp_board.render(unhide)
+end
+
+def display_player_board
+  puts "==============PLAYER BOARD=============="
+  puts @player_board.render(true)
 end
 
 def player_shot
@@ -200,16 +179,6 @@ def display_shot_result(coord, player = false)
       return "#{coord} hit and sunk!"
     end
   end
-end
-
-def display_comp_board(unhide)
-  puts "=============COMPUTER BOARD============="
-  puts @comp_board.render(unhide)
-end
-
-def display_player_board
-  puts "==============PLAYER BOARD=============="
-  puts @player_board.render(true)
 end
 
 def game_over?
