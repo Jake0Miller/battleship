@@ -25,5 +25,9 @@ class ShotCaller
     end
   end
 
-  
+  def call_shot
+    shot = @cells.keys.sample
+    @cells.delete(shot)
+    shot
+  end
 end

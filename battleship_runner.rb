@@ -1,6 +1,7 @@
 require './lib/cell'
 require './lib/board'
 require './lib/ship'
+require './lib/shot_caller'
 require './lib/coordinate_generator'
 require 'pry'
 
@@ -158,7 +159,6 @@ end
 # THIS NEEDS TO BE UPDATED. A LOT.
 def comp_shot
   shot = @shooter.call_shot
-  "A3"
 end
 
 def display_shot_result(coord, player = false)
