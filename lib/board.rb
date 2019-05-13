@@ -13,8 +13,8 @@ class Board
   def setup_board
     row = 'A'.ord
     col = 1
-    (row.upto(row+@board_size-1)).each { |letter| @board_letters << letter.chr }
-    (col.upto(@board_size)).each { |num| @board_numbers << num.to_s }
+    (row .. row+@board_size-1).each { |letter| @board_letters << letter.chr }
+    (col .. @board_size).each { |num| @board_numbers << num.to_s }
     @board_letters.each do |letter|
       @board_numbers.each do |num|
         @cells["#{letter.chr}#{num.to_s}"] = Cell.new("#{letter.chr}#{num.to_s}")
@@ -61,19 +61,41 @@ class Board
   end
 
   def render(unhide = false)
-     board = "  "
-     @board_numbers.each do |num|
-       board << num[-1] + " "
-     end
-     board << "\n"
-     @board_letters.each do |cur_letter|
-       board << cur_letter + " "
-       @board_numbers.each do |number|
-         board << @cells[cur_letter+number.to_s].render(unhide)+" "
-       end
-       board << "\n"
-     end
-     board
+    board = ""
+    print_doubles(board) if @board_size > 9
+    print_columns(board)
+    print_all_rows(board, unhide)
+    board
+  end
+
+  def print_doubles(board)
+    10.times do
+      board << "  "
+    end
+    (10..@board_size).each do |i|
+      board << i.to_s[0]+" "
+    end
+    board << "\n"
+    board
+  end
+
+  def print_columns(board)
+    board << "  "
+    @board_numbers.each do |num|
+     board << num[-1] + " "
+    end
+    board << "\n"
+    board
+  end
+
+  def print_all_rows(board, unhide)
+    @board_letters.each do |cur_letter|
+      board << cur_letter + " "
+      @board_numbers.each do |number|
+        board << @cells[cur_letter+number.to_s].render(unhide)+" "
+      end
+      board << "\n"
+    end
   end
 
   def all_ships_sunk

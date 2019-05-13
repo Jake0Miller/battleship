@@ -49,12 +49,13 @@ def place_comp_ships(ship)
   @comp_board.place(cur_ship, coord_generator(ship[1]))
 end
 
+# make this loop until all ships are placed successfully
 def coord_generator(length)
   number = @comp_board.board_numbers[0..-1*length].sample
   letter = @comp_board.board_letters[0..-1*length].sample
   coords = [letter+number]
   right_or_down = rand(0..1)
-  if right_or_down = 0
+  if right_or_down == 0
     coords = make_coords_with_same_letter(coords,length)
   else
     coords = make_coords_with_same_number(coords,length)
