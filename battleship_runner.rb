@@ -4,7 +4,7 @@ require './lib/ship'
 require 'pry'
 
 @min_board_size = 4
-@max_board_size = 15
+@max_board_size = 26
 @min_num_ships = 1
 @max_num_ships = 5
 @min_ship_length = 2
@@ -35,6 +35,7 @@ def play?
   start_game
 end
 
+#
 def create_boards
   puts "Select board size (#{@min_board_size} to #{@max_board_size}):"
   size = gets.chomp.to_i
@@ -46,22 +47,23 @@ end
 
 def place_comp_ships(ship)
   cur_ship = Ship.new(ship[0], ship[1])
+  coord_generator = CoordinateGenerator.new(@comp_board.board_numbers, @comp_board.board_letters)
   @comp_board.place(cur_ship, coord_generator(ship[1]))
 end
 
 # make this loop until all ships are placed successfully
-def coord_generator(length)
-  number = @comp_board.board_numbers[0..-1*length].sample
-  letter = @comp_board.board_letters[0..-1*length].sample
-  coords = [letter+number]
-  right_or_down = rand(0..1)
-  if right_or_down == 0
-    coords = make_coords_with_same_letter(coords,length)
-  else
-    coords = make_coords_with_same_number(coords,length)
-  end
-  coords
-end
+# def coord_generator(length)
+#   number = @comp_board.board_numbers[0..-1*length].sample
+#   letter = @comp_board.board_letters[0..-1*length].sample
+#   coords = [letter+number]
+#   right_or_down = rand(0..1)
+#   if right_or_down == 0
+#     coords = make_coords_with_same_letter(coords,length)
+#   else
+#     coords = make_coords_with_same_number(coords,length)
+#   end
+#   coords
+# end
 
 def make_coords_with_same_letter(coords,length)
   cur_coord = coords[0]
