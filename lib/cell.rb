@@ -20,10 +20,10 @@ class Cell
   end
 
   def fire_upon
-    @fired_upon = true
-    if @ship != nil
+    if @ship != nil and @fired_upon == false
       @ship.hit
     end
+    @fired_upon = true
   end
 
   def render(unhide = false)

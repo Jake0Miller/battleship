@@ -93,7 +93,7 @@ def place_player_ships(ship)
   puts "The #{cur_ship.name} is #{cur_ship.length} units long."
   puts @player_board.render(true)
   puts "Enter the coordinates for the #{cur_ship.name} (#{cur_ship.length} spaces):"
-  puts (0..cur_ship.length).inject("Example: ") { |text, i| text + "A#{i+1} "}
+  puts (0..cur_ship.length-1).inject("Example: ") { |text, i| text + "A#{i+1} "}
   ask_for_coordinates(cur_ship)
 end
 
