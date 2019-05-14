@@ -30,12 +30,12 @@ class Board
     true
   end
 
-  def valid_placement?(ship, coords)
-    return false if ship.length != coords.length
+  def valid_placement?(ship_length, coords)
+    return false if ship_length != coords.length
     return false if coords.any? { |coord| valid_coordinate?(coord) == false }
     return false if coords.any? { |coord| !@cells[coord].empty? }
-    return check_letters_same(ship.length,coords) if coords[0][0] == coords[1][0]
-    return check_numbers_same(ship.length,coords) if coords[0][1..-1] == coords[1][1..-1]
+    return check_letters_same(ship_length,coords) if coords[0][0] == coords[1][0]
+    return check_numbers_same(ship_length,coords) if coords[0][1..-1] == coords[1][1..-1]
   end
 
   def check_letters_same(length,coords)
@@ -55,7 +55,7 @@ class Board
   end
 
   def place(ship, coords)
-    return nil if !valid_placement?(ship, coords)
+    return nil if !valid_placement?(ship.length, coords)
     coords.each { |coord| @cells[coord].place_ship(ship) }
     @ships << ship
   end

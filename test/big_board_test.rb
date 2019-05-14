@@ -18,8 +18,8 @@ class BoardTest < MiniTest::Test
   end
 
   def test_valid_placement
-    assert @board.valid_placement?(@sub, ["A10", "A11"])
-    assert @board.valid_placement?(@cruiser, ["B10", "C10", "D10"])
+    assert @board.valid_placement?(@sub.length, ["A10", "A11"])
+    assert @board.valid_placement?(@cruiser.length, ["B10", "C10", "D10"])
   end
 
   def test_ship_is_placed

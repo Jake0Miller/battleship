@@ -33,25 +33,25 @@ class BoardTest < MiniTest::Test
   end
 
   def test_valid_placement_by_length
-    refute @board.valid_placement?(@cruiser, ["A1", "A2"])
-    assert @board.valid_placement?(@cruiser, ["A1", "A2", "A3"])
-    assert @board.valid_placement?(@sub, ["A1", "A2"])
-    refute @board.valid_placement?(@sub, ["A1", "A2", "A3"])
+    refute @board.valid_placement?(@cruiser.length, ["A1", "A2"])
+    assert @board.valid_placement?(@cruiser.length, ["A1", "A2", "A3"])
+    assert @board.valid_placement?(@sub.length, ["A1", "A2"])
+    refute @board.valid_placement?(@sub.length, ["A1", "A2", "A3"])
   end
 
   def test_nonconsecutive_coordinates
-    refute @board.valid_placement?(@sub, ["A4", "A5"])
-    refute @board.valid_placement?(@cruiser, ["A1", "A2", "A4"])
-    refute @board.valid_placement?(@sub, ["A1", "C1"])
-    refute @board.valid_placement?(@cruiser, ["A3", "A2", "A1"])
-    refute @board.valid_placement?(@sub, ["C1", "B1"])
-    refute @board.valid_placement?(@cruiser, ["A1", "B2", "C3"])
-    refute @board.valid_placement?(@sub, ["C2", "D3"])
+    refute @board.valid_placement?(@sub.length, ["A4", "A5"])
+    refute @board.valid_placement?(@cruiser.length, ["A1", "A2", "A4"])
+    refute @board.valid_placement?(@sub.length, ["A1", "C1"])
+    refute @board.valid_placement?(@cruiser.length, ["A3", "A2", "A1"])
+    refute @board.valid_placement?(@sub.length, ["C1", "B1"])
+    refute @board.valid_placement?(@cruiser.length, ["A1", "B2", "C3"])
+    refute @board.valid_placement?(@sub.length, ["C2", "D3"])
   end
 
   def test_consecutive_coordinates
-    assert @board.valid_placement?(@sub, ["A1", "A2"])
-    assert @board.valid_placement?(@cruiser, ["B1", "C1", "D1"])
+    assert @board.valid_placement?(@sub.length, ["A1", "A2"])
+    assert @board.valid_placement?(@cruiser.length, ["B1", "C1", "D1"])
   end
 
   def test_ship_is_placed
@@ -125,7 +125,7 @@ class BoardTest < MiniTest::Test
     @board.cells["C1"].fire_upon
 
     expected = "  1 2 3 4 \n" +
-              "A H . . . \n" +
+              "A \e[31mH\e[0m . . . \n" +
               "B . . . M \n" +
               "C X . . . \n" +
               "D X . . . \n"
@@ -135,7 +135,7 @@ class BoardTest < MiniTest::Test
     assert_equal expected, actual
 
     expected = "  1 2 3 4 \n" +
-              "A H S S . \n" +
+              "A \e[31mH\e[0m S S . \n" +
               "B . . . M \n" +
               "C X . . . \n" +
               "D X . . . \n"

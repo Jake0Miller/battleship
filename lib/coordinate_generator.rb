@@ -7,9 +7,10 @@ class CoordinateGenerator
   end
 
   def generate(length)
-    number = @board_numbers[0..-1*length].sample
-    letter = @board_letters[0..-1*length].sample
+    number = @board_numbers.sample
+    letter = @board_letters.sample
     coords = [letter+number]
+
     right_or_down = rand(0..1)
     if right_or_down == 0
       coords = make_coords_with_same_letter(coords,length)

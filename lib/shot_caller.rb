@@ -27,7 +27,8 @@ class ShotCaller
   end
 
   def call_shot
-    hits = @board.cells.keys.find_all { |key| @board.cells[key].render == "H" }
+    hit = "\e[31mH\e[0m"
+    hits = @board.cells.keys.find_all { |key| @board.cells[key].render == hit }
     if hits.empty?
       call_grid_shot
     else

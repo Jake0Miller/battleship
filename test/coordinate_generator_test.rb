@@ -24,6 +24,6 @@ class CoordinateGeneratorTest < MiniTest::Test
   end
 
   def test_it_generates_valid_coordinates
-    assert @board.valid_placement?(@sub, @gen.generate(2))
+    assert @board.valid_placement?(@sub.length, @gen.generate(2))
   end
 end

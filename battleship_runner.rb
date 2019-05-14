@@ -35,19 +35,18 @@ def play?
 end
 
 def create_boards
-  board_size = set_board_size
-  @player_board = Board.new(board_size)
-  @comp_board = Board.new(board_size)
+  set_board_size
+  @player_board = Board.new(@board_size)
+  @comp_board = Board.new(@board_size)
   place_ships
 end
 
 def set_board_size
-  board_size = 0
-  while board_size > @max_board_size || board_size < @min_board_size
+  @board_size = 0
+  while @board_size > @max_board_size || @board_size < @min_board_size
     puts "Select board size (#{@min_board_size} to #{@max_board_size}):"
-    board_size = gets.chomp.to_i
+    @board_size = gets.chomp.to_i
   end
-  board_size
 end
 
 def place_ships
@@ -88,6 +87,7 @@ end
 
 def set_ship_size
   input_size = 0
+  @max_ship_length = [@max_ship_length, @board_size].min
   while input_size < @min_ship_length || input_size > @max_ship_length
     puts "How big should this ship be? (#{@min_ship_length}-#{@max_ship_length})"
     input_size = gets.chomp.to_i
@@ -109,7 +109,7 @@ end
 
 def ask_for_coordinates(ship)
   coordinates = gets.chomp.split(" ")
-  while !@player_board.valid_placement?(ship, coordinates)
+  while !@player_board.valid_placement?(ship.length, coordinates)
     puts "Those are invalid coordinates. Please try again:"
     coordinates = gets.chomp.split(" ")
   end

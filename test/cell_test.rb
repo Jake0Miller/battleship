@@ -64,7 +64,7 @@ class CellTest < MiniTest::Test
 
     @cellB4.fire_upon
 
-    assert_equal "H", @cellB4.render
+    assert_equal "\e[31mH\e[0m", @cellB4.render
     refute @cellB4.ship.sunk?
     refute @cruiser.sunk?
   end

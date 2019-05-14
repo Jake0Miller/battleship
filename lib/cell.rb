@@ -36,7 +36,7 @@ class Cell
     elsif fired_upon? && empty?
       return "M"
     elsif fired_upon? && !empty?
-      return "H"
+      return "\e[31mH\e[0m"
     end
   end
 end
