@@ -47,7 +47,7 @@ class ShotCallerTest < MiniTest::Test
     @board.cells["B2"].fire_upon
     @board.cells["B3"].fire_upon
     shot = @shooter.call_shot
-
+    
     assert ["B1", "B4"].include?(shot)
   end
 end
