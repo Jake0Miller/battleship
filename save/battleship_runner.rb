@@ -1,7 +1,6 @@
 require './lib/cell'
 require './lib/board'
 require './lib/ship'
-require './lib/shot_caller'
 require './lib/coordinate_generator'
 require './lib/shot_caller'
 require 'pry'
