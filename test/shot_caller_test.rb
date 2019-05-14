@@ -9,10 +9,10 @@ require 'pry'
 class ShotCallerTest < MiniTest::Test
   def setup
     @board = Board.new(4)
-    # @sub = Ship.new("Sub", 2)
-    # @cruiser = Ship.new("Cruiser", 3)
+    @sub = Ship.new("Sub", 2)
+    #@cruiser = Ship.new("Cruiser", 3)
     @ships = [["Sub", "2"], ["Cruiser", "3"]]
-    @shooter = ShotCaller.new(4, @ships)
+    @shooter = ShotCaller.new(@board, @ships)
   end
 
   def test_that_it_exists
@@ -24,6 +24,21 @@ class ShotCallerTest < MiniTest::Test
   end
 
   def test_it_sets_up_cells
-    assert_equal 8, @shooter.cells.length
+    assert_equal 8, @shooter.grid_cells.length
+  end
+
+  def test_it_calls_shots
+    shot = @shooter.call_shot
+
+    assert @board.cells.include?(shot)
+    assert_nil @shooter.grid_cells[shot]
+  end
+
+  def test_hit_logic
+    @board.place(@sub,["B1", "B2"])
+    @board.cells["B2"].fire_upon
+    shot = @shooter.call_shot
+    
+    assert ["B1", "B3", "A2", "C2"].include?(shot)
   end
 end

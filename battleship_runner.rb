@@ -38,10 +38,10 @@ def create_boards
   create_boards if board_size > @max_board_size || board_size < @min_board_size
   @player_board = Board.new(board_size)
   @comp_board = Board.new(board_size)
-  place_ships(board_size)
+  place_ships
 end
 
-def place_ships(board_size)
+def place_ships
   num_ships = set_num_ships
   puts " "
   puts "Create your fleet!\n"
@@ -49,7 +49,7 @@ def place_ships(board_size)
   puts " "
   ships.each { |ship| place_player_ships(ship) }
   ships.each { |ship| place_comp_ships(ship) }
-  @shooter = ShotCaller.new(board_size,ships)
+  @shooter = ShotCaller.new(@player_board,ships)
   puts " "
   puts "All ships have been placed."
   puts "Let the game begin!"
@@ -155,10 +155,8 @@ def player_shot
   shot
 end
 
-# THIS NEEDS TO BE UPDATED. A LOT.
 def comp_shot
-  shot = @shooter.call_shot
-  "A3"
+  @shooter.call_shot
 end
 
 def display_shot_result(coord, player = false)
