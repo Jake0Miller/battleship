@@ -29,9 +29,9 @@ class ShotCaller
   def call_shot
     hits = @board.cells.keys.find_all { |key| @board.cells[key].render == "H" }
     if hits.empty?
-      return call_grid_shot
+      call_grid_shot
     else
-      return shoot_at_target(hits)
+      shoot_at_target(hits)
     end
   end
 
@@ -47,13 +47,6 @@ class ShotCaller
     else
       fire_in_line(hits)
     end
-
-    # horiz_or_vert = rand(0..1)
-    # if horiz_or_vert == 0
-    #   return shoot_horiz
-    # else
-    #   return shoot_vert
-    # end
   end
 
   def fire_randomly(target)
@@ -64,37 +57,45 @@ class ShotCaller
     targets << left_target(target)
     targets << right_target(target)
 
+    sample_targets(targets)
+  end
+
+  def right_target(target)
+    "#{target[0]}#{target[1..-1].next}"
+  end
+
+  def left_target(target)
+    "#{target[0]}#{(target[1..-1].to_i-1).to_s}"
+  end
+
+  def top_target(target)
+    "#{(target[0].ord-1).chr}#{target[1..-1]}"
+  end
+
+  def bottom_target(target)
+    "#{target[0].next}#{target[1..-1]}"
+  end
+
+  def sample_targets(targets)
     targets.find_all do |target|
       @board.valid_coordinate?(target) && !@board.cells[target].fired_upon?
     end.sample
   end
 
-  def bottom_target(target)
-    "#{target[0]}#{target[1..-1].next}"
-  end
-
-  def top_target(target)
-    "#{target[0]}#{(target[1..-1].to_i-1).to_s}"
-  end
-
-  #
-  def left_target(target)
-    "#{(target[0].ord-1).chr}#{target[1..-1]}"
-  end
-
-  def right_target(target)
-    "#{target[0].next}#{target[1..-1]}"
-  end
-
   def fire_in_line(hits)
-
-  end
-
-  def shoot_horiz
-
-  end
-
-  def shoot_vert
-
+    targets = []
+    if @board.check_letters_same(hits.length,hits)
+      targets << left_target(hits.min)
+      targets << right_target(hits.max)
+    end
+    if @board.check_numbers_same(hits.length,hits)
+      targets << top_target(hits.min)
+      targets << bottom_target(hits.max)
+    end
+    targets = sample_targets(targets)
+    while targets.nil?
+      targets = fire_randomly(hits.sample)
+    end
+    targets
   end
 end

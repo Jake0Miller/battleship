@@ -34,20 +34,20 @@ class Board
     return false if ship.length != coords.length
     return false if coords.any? { |coord| valid_coordinate?(coord) == false }
     return false if coords.any? { |coord| !@cells[coord].empty? }
-    return check_letters_same(ship,coords) if coords[0][0] == coords[1][0]
-    return check_numbers_same(ship,coords) if coords[0][1..-1] == coords[1][1..-1]
+    return check_letters_same(ship.length,coords) if coords[0][0] == coords[1][0]
+    return check_numbers_same(ship.length,coords) if coords[0][1..-1] == coords[1][1..-1]
   end
 
-  def check_letters_same(ship,coords)
-    (ship.length-1).times do |i|
+  def check_letters_same(length,coords)
+    (length-1).times do |i|
       return false if coords[i][0] != coords[i+1][0]
       return false if coords[i][1..-1].next != coords[i+1][1..-1]
     end
     true
   end
 
-  def check_numbers_same(ship,coords)
-    (ship.length-1).times do |i|
+  def check_numbers_same(length,coords)
+    (length-1).times do |i|
       return false if coords[i][0].next != coords[i+1][0]
       return false if coords[i][1..-1] != coords[i+1][1..-1]
     end

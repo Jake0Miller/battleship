@@ -10,7 +10,7 @@ class ShotCallerTest < MiniTest::Test
   def setup
     @board = Board.new(4)
     @sub = Ship.new("Sub", 2)
-    #@cruiser = Ship.new("Cruiser", 3)
+    @cruiser = Ship.new("Cruiser", 3)
     @ships = [["Sub", "2"], ["Cruiser", "3"]]
     @shooter = ShotCaller.new(@board, @ships)
   end
@@ -38,7 +38,16 @@ class ShotCallerTest < MiniTest::Test
     @board.place(@sub,["B1", "B2"])
     @board.cells["B2"].fire_upon
     shot = @shooter.call_shot
-    
+
     assert ["B1", "B3", "A2", "C2"].include?(shot)
+  end
+
+  def test_multi_hit_logic
+    @board.place(@cruiser,["B1", "B2","B3"])
+    @board.cells["B2"].fire_upon
+    @board.cells["B3"].fire_upon
+    shot = @shooter.call_shot
+    
+    assert ["B1", "B4"].include?(shot)
   end
 end

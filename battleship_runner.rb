@@ -2,6 +2,7 @@ require './lib/cell'
 require './lib/board'
 require './lib/ship'
 require './lib/coordinate_generator'
+require './lib/shot_caller'
 require 'pry'
 
 @min_board_size = 4
