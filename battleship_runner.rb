@@ -35,20 +35,26 @@ def play?
 end
 
 def create_boards
-  puts "Select board size (#{@min_board_size} to #{@max_board_size}):"
-  board_size = gets.chomp.to_i
-  create_boards if board_size > @max_board_size || board_size < @min_board_size
+  board_size = set_board_size
   @player_board = Board.new(board_size)
   @comp_board = Board.new(board_size)
   place_ships
 end
 
+def set_board_size
+  board_size = 0
+  while board_size > @max_board_size || board_size < @min_board_size
+    puts "Select board size (#{@min_board_size} to #{@max_board_size}):"
+    board_size = gets.chomp.to_i
+  end
+  board_size
+end
+
 def place_ships
   num_ships = set_num_ships
-  puts " "
+  puts `clear`
   puts "Create your fleet!\n"
   ships = ask_for_ships(num_ships)
-  puts " "
   ships.each { |ship| place_player_ships(ship) }
   ships.each { |ship| place_comp_ships(ship) }
   @shooter = ShotCaller.new(@player_board,ships)
@@ -59,13 +65,12 @@ def place_ships
 end
 
 def set_num_ships
-  puts "How many ships do you want to play with? (#{@min_num_ships}-#{@max_num_ships})"
-  input_number = gets.chomp.to_i
-  if input_number < @min_num_ships || input_number > @max_num_ships
-    set_num_ships
-  else
-    return input_number
+  input_number = 0
+  while input_number < @min_num_ships || input_number > @max_num_ships
+    puts "How many ships do you want to play with? (#{@min_num_ships}-#{@max_num_ships})"
+    input_number = gets.chomp.to_i
   end
+  input_number
 end
 
 def ask_for_ships(num_ships)
@@ -82,30 +87,31 @@ def set_ship_name
 end
 
 def set_ship_size
-  puts "How big should this ship be? (#{@min_ship_length}-#{@max_ship_length})"
-  input_size = gets.chomp.to_i
-  if input_size < @min_ship_length || input_size > @max_ship_length
-    set_ship_size
-  else
-    return input_size
+  input_size = 0
+  while input_size < @min_ship_length || input_size > @max_ship_length
+    puts "How big should this ship be? (#{@min_ship_length}-#{@max_ship_length})"
+    input_size = gets.chomp.to_i
   end
+  puts ""
+  input_size
 end
 
 def place_player_ships(ship)
-  cur_ship = Ship.new(ship[0], ship[1])
-  puts "The #{cur_ship.name} is #{cur_ship.length} units long."
+  puts `clear`
+  ship = Ship.new(ship[0], ship[1])
   puts @player_board.render(true)
-  puts "Enter the coordinates for the #{cur_ship.name} (#{cur_ship.length} spaces):"
-  puts (0..cur_ship.length-1).inject("Example: ") { |text, i| text + "A#{i+1} "}
-  ask_for_coordinates(cur_ship)
+  puts ""
+  puts "The #{ship.name} is #{ship.length} units long."
+  puts "Enter the coordinates for the #{ship.name} (#{ship.length} spaces):"
+  puts (0..ship.length-1).inject("Example: ") { |text, i| text + "A#{i+1} "}
+  ask_for_coordinates(ship)
 end
 
 def ask_for_coordinates(ship)
-  print "> "
   coordinates = gets.chomp.split(" ")
-  if !@player_board.valid_placement?(ship, coordinates)
+  while !@player_board.valid_placement?(ship, coordinates)
     puts "Those are invalid coordinates. Please try again:"
-    ask_for_coordinates(ship)
+    coordinates = gets.chomp.split(" ")
   end
   @player_board.place(ship, coordinates)
 end
@@ -120,6 +126,7 @@ def place_comp_ships(ship)
 end
 
 def start_game
+  puts `clear`
   until game_over?
     take_turn
   end
@@ -129,11 +136,13 @@ end
 def take_turn
   display_comp_board(false)
   display_player_board
+  puts ""
   puts "Enter the coordinate for your shot (eg B4):"
   pshot = player_shot
   @comp_board.cells[pshot].fire_upon
   cshot = comp_shot
   @player_board.cells[cshot].fire_upon
+  puts `clear`
   puts display_shot_result(pshot, true)
   puts display_shot_result(cshot)
 end
@@ -150,9 +159,9 @@ end
 
 def player_shot
   shot = gets.chomp
-  if !@comp_board.valid_coordinate?(shot) || @comp_board.cells[shot].fired_upon?
+  while !@comp_board.valid_coordinate?(shot) || @comp_board.cells[shot].fired_upon?
     puts "Please enter a valid coordinate (eg B2):"
-    shot = player_shot
+    shot = gets.chomp
   end
   shot
 end
