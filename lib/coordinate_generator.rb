@@ -1,23 +1,24 @@
 class CoordinateGenerator
   attr_reader :board_numbers, :board_letters
 
-  def initialize(board_numbers, board_letters)
-    @board_numbers = board_numbers
-    @board_letters = board_letters
+  def initialize
   end
 
-  def generate(length)
-    number = @board_numbers.sample
-    letter = @board_letters.sample
-    coords = [letter+number]
+  def generate(board,length)
+    number = board.board_numbers.sample
+    letter = board.board_letters.sample
 
-    right_or_down = rand(0..1)
-    if right_or_down == 0
-      coords = make_coords_with_same_letter(coords,length)
-    else
-      coords = make_coords_with_same_number(coords,length)
-    end
-    coords
+    horiz_or_vert = []
+
+    coords = [letter+number]
+    make_coords_with_same_letter(coords,length)
+    horiz_or_vert << coords if board.valid_placement?(length,coords)
+
+    coords = [letter+number]
+    make_coords_with_same_number(coords,length)
+    horiz_or_vert << coords if board.valid_placement?(length,coords)
+
+    horiz_or_vert.sample
   end
 
   def make_coords_with_same_letter(coords,length)
@@ -26,7 +27,6 @@ class CoordinateGenerator
       cur_coord = cur_coord[0] + cur_coord[1].next
       coords << cur_coord
     end
-    coords
   end
 
   def make_coords_with_same_number(coords,length)
@@ -35,6 +35,5 @@ class CoordinateGenerator
       cur_coord = cur_coord[0].next + cur_coord[1]
       coords << cur_coord
     end
-    coords
   end
 end

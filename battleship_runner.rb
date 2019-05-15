@@ -119,10 +119,10 @@ end
 
 def place_comp_ships(ship)
   cur_ship = Ship.new(ship[0], ship[1])
-  coord_generator = CoordinateGenerator.new(@comp_board.board_numbers, @comp_board.board_letters)
+  coord_generator = CoordinateGenerator.new
   placed = nil
   while placed.nil?
-    placed = @comp_board.place(cur_ship, coord_generator.generate(ship[1]))
+    placed = @comp_board.place(cur_ship, coord_generator.generate(@comp_board,ship[1]))
   end
 end
 
