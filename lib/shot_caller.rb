@@ -29,25 +29,17 @@ class ShotCaller
   def call_shot
     hit = "\e[31mH\e[0m"
     hits = @board.cells.keys.find_all { |key| @board.cells[key].render == hit }
-    if hits.empty?
-      call_grid_shot
-    else
-      shoot_at_target(hits)
-    end
-  end
-
-  def call_grid_shot
-    shot = @grid_cells.keys.sample
+    shot = hits.empty? ? call_grid_shot : shoot_at_target(hits)
     @grid_cells.delete(shot)
     shot
   end
 
+  def call_grid_shot
+    @grid_cells.keys.sample
+  end
+
   def shoot_at_target(hits)
-    if hits.length == 1
-      fire_randomly(hits.first)
-    else
-      fire_in_line(hits)
-    end
+    hits.length == 1 ? fire_randomly(hits.first) : fire_in_line(hits)
   end
 
   def fire_randomly(target)
