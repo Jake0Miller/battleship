@@ -65,6 +65,7 @@ end
 
 def set_num_ships
   input_number = 0
+  @max_num_ships = [@max_num_ships, @board_size-1].min
   while input_number < @min_num_ships || input_number > @max_num_ships
     puts "How many ships do you want to play with? (#{@min_num_ships}-#{@max_num_ships})"
     input_number = gets.chomp.to_i
